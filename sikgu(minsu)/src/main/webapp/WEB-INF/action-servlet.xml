@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.3.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+		
+	<context:annotation-config />
+	<context:component-scan
+		base-package="lab.spring.web" />
+	<!-- HandlerMapping Bean (DefaultAnnotationHandlerMapping) -->
+	<!-- handlerMapper 는 context:component-scan에 선언되어 있는 @Controller 들의 목록을 
+		만든 후, 요청이 들어오면 이름에 걸맞는 controller를 실행시킨다. -->
+
+	<!-- ViewResolver Bean -->
+	<!-- 아래는 jsp를 처리할 수 있는 뷰리졸버다.(spring에서 기본적으로 지원) -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/view/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- mybatis 사용 -->
+	<jee:jndi-lookup id="dataSource" jndi-name="jdbc/oracle" resource-ref="true"/>
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+		p:driverClassName="oracle.jdbc.OracleDriver"
+		p:url="jdbc:oracle:thin:@127.0.0.1:1521:orcl" 
+		p:username="hr"
+		p:password="oracle" />
+	
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations"
+			value="classpath*:lab/mybatis/mappers/*.xml" />
+	</bean>
+
+
+	<bean id="sqlSession"
+		class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+
+<mvc:annotation-driven>
+<mvc:message-converters>
+	<bean
+		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+	</bean>
+</mvc:message-converters>
+</mvc:annotation-driven>
+
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">		
+		<property name="basenames">
+		<value>message.validation</value>
+		</property>
+		</bean>
+
+<!-- 	<mvc:interceptors> -->
+<!-- 		<mvc:interceptor> -->
+<!-- 			<mvc:mapping path="/list.do" /> -->
+<!-- 			<bean id="authCheckInterceptor" class="lab.spring.web.interceptor.AuthCheckInterceptor"></bean> -->
+<!-- 		</mvc:interceptor> -->
+<!-- 	</mvc:interceptors> -->
+	
+</beans>
+
+		

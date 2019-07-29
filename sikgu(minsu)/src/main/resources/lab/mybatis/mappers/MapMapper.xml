@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lab.mybatis.map.MapMapper">
+
+<!-- 메인 검색 결과   ##################################################################### -->
+
+	<select id="getMarkers" resultType="lab.spring.sikgu.model.StoreVO" parameterType="hashmap">
+		select 
+	
+	
+	
+	</select>
+	
+
+
+
+<!-- 메인 검색 결과   ##################################################################### -->
+
+	<select id="getSearchedList" resultType="lab.spring.web.model.UserVO" parameterType="hashmap">
+		select * from userinfo where
+		<if test="userid != null">
+		userid like #{userid}
+		</if>
+		<if test="username != null">
+		username like #{username}
+		</if>
+		<if test="email != null">
+		email like #{email}
+		</if>
+	</select>
+
+<!-- / 메인 검색 결과   ##################################################################### -->
+
+
+</mapper>
